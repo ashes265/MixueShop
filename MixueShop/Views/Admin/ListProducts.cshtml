@@ -1,0 +1,227 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+}
+@using MixueShop.Models
+@model List<Product>
+@*==================================================*@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href=~/css/styleadmin.css />
+
+    <title>Mixue</title>
+    <style>
+        ion-icon {
+            padding-right: 5px;
+            margin: auto;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="header">
+        <div class="inheader">
+            <div class="menu">
+                <ul>
+                    <li>
+                        <a href="/Home/ViewProduct">
+                            <ion-icon name="storefront"></ion-icon>
+                            Shop
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Admin/OverView">
+                            <ion-icon name="stats-chart"></ion-icon>
+                            Statisctic
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="/Admin/ListOrders">
+                            <ion-icon name="settings"></ion-icon>
+                            Manage
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <ion-icon name="person-circle"></ion-icon>
+                            @if (@ViewBag.Name != null)
+                            {
+                                @ViewBag.Name
+                            }
+                            else
+                            {
+                                <p>Account</p>
+                            }
+                        </a>
+                    </li>
+                    @if (@ViewBag.Name != null)
+                    {
+                        <li>
+
+                            <a asp-controller="Home" asp-action="Logout">
+                                <ion-icon name="log-out-outline"></ion-icon>
+                                Log out
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="left">
+            <div class="categories">
+                <div class="rightTitle">
+                    Page
+                </div>
+                <button class="cate" id="directPageOrder" value="/Admin/ListOrders" onclick="changeDirectOrder()">
+                    List Orders
+                </button>
+                <button class="cateactive" id="directPageProduct" value="/Admin/ListProducts" onclick="changeDirectProduct()">
+                    List Products
+                </button>
+
+            </div>
+        </div>
+        <div class="right">
+            <div class="cart">
+                <form id="listPro" asp-controller="Admin" asp-action="ListProducts" method="get" style="height: 90%;">
+                    <div class="cartContact">
+                        <div style="margin: auto 0">
+                            <h4 style="margin:auto;">List Product</h4><a asp-controller="Admin" style="text-decoration:none;color: #9d8b8b;text-shadow: 0 0 15px white;" asp-action="Add">Add</a>
+                        </div>
+                        <div class="optionSort" style="margin: auto 0">
+                            <div class="option">
+                                Sort by price:
+                                <select name="sort" onchange="changeSort()">
+                                    <option value="0">Default</option>
+
+                                    @if (@ViewBag.sortSelected == 1)
+                                    {
+                                        <option selected value="1">Ascending</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="1">Ascending</option>
+                                    }
+                                    @if (@ViewBag.sortSelected == 2)
+                                    {
+                                        <option selected value="2">Descending</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="2">Descending</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 90%;">
+
+                        <h4 style="color: red;">@ViewBag.Error</h4>
+                        @if (@ViewBag.key != null)
+                        {
+                            <div style="margin: 0 auto;padding: 1% 0;width: 50%;">
+                                <input style="width: 80%" name="search" type="text" value="@ViewBag.key" />
+                                <button style="width: auto" type="submit">Search</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="margin: 0 auto;padding: 1% 0;width: 50%;">
+                                <input style="width: 80%" name="search" type="text" />
+                                <button style="width: auto" type="submit">Search</button>
+                            </div>
+                        }
+                        <div class="listProduct">
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="border-top: none;" scope="col">ID Product</th>
+                                        <th style="border-top: none;" scope="col">Product Name</th>
+                                        <th style="border-top: none;" scope="col">Category Name</th>
+                                        <th style="border-top: none;" scope="col">Price</th>
+                                        <th style="border-top: none;" scope="col">Discount</th>
+                                        <th style="border-top: none;" scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var p in ViewBag.products)
+                                    {
+                                            <tr>
+                                                <th scope="row">#@p.ProductId</th>
+                                                <td>@p.ProductName</td>
+                                                <td>@p.Cate.CateName</td>
+                                                <td>@p.ProductPrice</td>
+                                                <td>@p.Discount</td>
+                                                <td>
+                                                    <a asp-controller="Admin" asp-action="Update" asp-route-id=@p.ProductId>Update</a>/
+                                                    <a asp-controller="Admin" asp-action="Delete" asp-route-id=@p.ProductId>Delete</a>
+                                                </td>
+                                            </tr>
+                                        
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        @if ((int)ViewData["TotalPage"] > 1)
+                        {
+
+                            <div style="height:5%;text-align:center">
+
+                                @for (int i = 1; i <= (int)ViewData["TotalPage"]; i++)
+                                {
+                                    @if (@ViewBag.pageSelected == i)
+                                    {
+                                        <button class="pageActive" value="@i" type="submit" name="page">@i</button>
+                                    }
+                                    else
+                                    {
+                                        <button style="padding: 5px;border-radius: 15px;cursor:pointer" value="@i" type="submit" name="page">@i</button>
+                                    }
+                                }
+
+                            </div>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function changeDirectProduct(){
+            var x=document.getElementById("directPageProduct").value;
+            console.log(x);
+            window.location=x;
+        }
+        function changeDirectOrder(){
+            var x=document.getElementById("directPageOrder").value;
+            console.log(x);
+            window.location=x;
+        }
+        function changeSort(){
+            document.getElementById("listPro").submit();
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

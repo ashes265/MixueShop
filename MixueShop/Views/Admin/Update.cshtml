@@ -1,0 +1,202 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using MixueShop.Models
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model MixueShop.Models.Product
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href=~/css/styleadmin.css />
+
+	<title>Mixue</title>
+	<style>
+		ion-icon {
+			padding-right: 5px;
+			margin: auto;
+		}
+	</style>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="header">
+		<div class="inheader">
+			<div class="menu">
+				<ul>
+					<li>
+						<a href="/Home/ViewProduct">
+							<ion-icon name="storefront"></ion-icon>
+							Shop
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<ion-icon name="stats-chart"></ion-icon>
+							Statisctic
+						</a>
+					</li>
+					<li class="active">
+						<a href="/Admin/ListOrders">
+							<ion-icon name="settings"></ion-icon>
+							Manage
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							Account
+						</a>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="content">
+		<div class="left">
+			<div class="categories">
+				<div class="rightTitle">
+					Page
+				</div>
+				<button class="cate" id="directPageProduct" value="/Admin/ListProducts" onclick="changeDirectProduct()">
+					List Products
+				</button>
+				<button class="cate" id="directPageOrder" value="/Admin/ListOrders" onclick="changeDirectOrder()">
+					List Orders
+				</button>
+			</div>
+		</div>
+		<div class="right">
+			<div class="cart">
+				@*<div class="cartContact">
+					<div style="margin: auto 0;display: flex;">
+						<h4 style="margin:auto;">List Product</h4>&nbsp
+						<ion-icon name="arrow-forward-outline"></ion-icon>
+						<a asp-controller="Admin"
+						   style="text-decoration:none;color: #9d8b8b;text-shadow: 0 0 15px white;"
+						   asp-action="Add">Add</a>
+					</div>
+					<div class="optionSort" style="margin: auto 0">
+						<div class="option">
+							Sort by ID:
+							<select>
+								<option>Ascending</option>
+									<option>Descending/option>
+							</select>
+						</div>
+						<div class="option">
+							Category:
+
+						</div>
+
+
+					</div>
+				</div>*@
+				<div style="height: 90%;">
+					<div class="listProduct">
+
+						<form asp-controller="Admin" asp-action="Update" method="post" style="margin:auto">
+							<table class="table">
+								<thead>
+									<tr>
+										<th style="border-top: none;border-bottom: none;text-align: left;" scope="col">
+											Product Name
+										</th>
+										<th style="border-top: none;border-bottom: none;text-align: left;">
+											<input type="text" asp-for=ProductId value=@Model.ProductId readonly />
+										</th>
+									</tr>
+									<tr>
+										<th style="border-top: none;border-bottom: none;text-align: left;" scope="col">
+											Product Name
+										</th>
+										<th style="border-top: none;border-bottom: none;text-align: left;">
+											<input type="text" asp-for=ProductName value=@Model.ProductName />
+										</th>
+									</tr>
+									<tr>
+										<th style="border-top: none;border-bottom: none;text-align: left;" scope="col">
+											Product Price
+										</th>
+										<th style="border-top: none;border-bottom: none;text-align: left;">
+											<input type="text" asp-for=ProductPrice value=@Model.ProductPrice />
+										</th>
+									</tr>
+									<tr>
+										<th style="border-top: none;border-bottom: none;text-align: left;" scope="col">
+											Category
+										</th>
+										<th style="border-top: none;border-bottom: none;text-align: left;">
+											<select asp-for=CateId>
+												@foreach (var c in @ViewBag.Categories)
+												{
+													@if (c.CateId == @Model.CateId)
+													{
+														<option value="@c.CateId" selected>@c.CateName</option>
+													}
+													<option value="@c.CateId">@c.CateName</option>
+												}
+											</select>
+										</th>
+									</tr>
+									<tr>
+										<th style="border-top: none;border-bottom: none;text-align: left;" scope="col">
+											Discount
+										</th>
+										<th style="border-top: none;border-bottom: none;text-align: left;">
+											<input type="text" asp-for=Discount value=@Model.Discount />
+										</th>
+									</tr>
+								</thead>
+							</table>
+							<button style="padding: 10px 30px;
+                            border-radius: 10px;
+                            background-color: #a193af;cursor:pointer" type="submit">
+								Save
+							</button>
+						</form>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		function changeCate() {
+			//kick hoat submit cho form tren
+			document.getElementById("listPro").submit();
+		}
+		function changeDirectProduct() {
+			var x = document.getElementById("directPageProduct").value;
+			console.log(x);
+			window.location = x;
+		}
+		function changeDirectOrder() {
+			var x = document.getElementById("directPageOrder").value;
+			console.log(x);
+			window.location = x;
+		}
+	</script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+			crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+			crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+			crossorigin="anonymous"></script>
+	<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

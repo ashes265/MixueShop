@@ -1,0 +1,108 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using MixueShop.Models
+@model IEnumerable<CartItem>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@section breadcrum{
+<div>
+    <div>
+        <div>
+            <div><a href="index.html">Home</a> <span>/</span> <strong>Cart</strong></div>
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    <div>
+        <div>
+            <form method="post">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @ViewBag.carts)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>@item.Price</td>
+                                <td>
+                                    <div>
+                                        @*<div class="input-group-prepend">
+                                            <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+                                            </div>*@
+                                        @*<input type="text" value="@item.Quantity" placeholder="">*@
+                                        @*<div class="input-group-append">
+                                            <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
+                                            </div>*@
+                                        @item.Quantity
+                                    </div>
+
+                                </td>
+                                <td>@item.TotalMoney</td>
+                                <td>
+                                    <button>
+                                        <a asp-action="RemoveItem" asp-controller="Cart" asp-route-id=@item.Id>
+                                            Remove
+                                        </a>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        <div>
+            <div>
+                <div>
+                    <button>
+                        <a asp-controller="Home" asp-action="ViewProduct">
+                            Continue Shopping
+                        </a>
+
+                    </button>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <div>
+                        <h3>Cart Totals</h3>
+                    </div>
+                    <div>
+                        <div>
+                            <span>Total</span>
+                        </div>
+                        <div>
+                            <strong>@ViewBag.Amount </strong>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <button>
+                                <a asp-controller="Cart" asp-action="CheckoutCart">
+                                    Proceed To Checkout
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

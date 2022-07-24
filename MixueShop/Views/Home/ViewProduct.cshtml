@@ -1,0 +1,252 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@using MixueShop.Models
+@model List<Product>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Mixue</title>
+    <style>
+        ion-icon {
+            padding-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="inheader">
+            <div class="menu">
+                <ul>
+                    <li class="active">
+                        <a href="#">
+                            <ion-icon name="storefront"></ion-icon>
+                            Shop
+                        </a>
+                    </li>
+                    @if (@ViewBag.Role == 1)
+                    {
+                        <li>
+                            <a href="/Admin/ListOrders">
+                                <ion-icon name="settings"></ion-icon>
+                                Manage
+                            </a>
+                        </li>
+
+                    }
+                    <li>
+                        <a href="#">
+                            <ion-icon name="person-circle"></ion-icon>
+                            @if (@ViewBag.Name != null)
+                            {
+                                @ViewBag.Name
+                            }
+                            else
+                            {
+                                <p>Account</p>
+                            }
+                        </a>
+                    </li>
+                    @if (@ViewBag.Name != null)
+                    {
+                        <li>
+
+                            <a asp-controller="Home" asp-action="Logout">
+                                <ion-icon name="log-out-outline"></ion-icon>
+                                Log out
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="left">
+            <div class="cart">
+                <div class="cartContact">
+                    <h4 style="margin:auto;">Order Infor</h4>
+                </div>
+                <div class="inforOrder">
+                    @if (@ViewBag.carts != null)
+                    {
+                        <form method="post">
+                            <table style="color: white;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding0 10px">Product</th>
+                                        <th style="padding0 10px">Price</th>
+                                        <th style="padding0 10px">Quantity</th>
+                                        <th style="padding0 10px">Total</th>
+                                        <th style="padding0 10px">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in @ViewBag.carts)
+                                    {
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                @item.Name
+                                            </td>
+                                            <td style="text-align: center;">@item.Price</td>
+                                            <td style="text-align: center;">
+                                                <div>
+                                                    @item.Quantity
+                                                </div>
+
+                                            </td>
+                                            <td style="text-align: center;">@item.TotalMoney</td>
+                                            <td style="text-align: center;">
+                                                <button>
+                                                    <a asp-action="RemoveItem" asp-controller="Cart" asp-route-id=@item.Id>
+                                                        Remove
+                                                    </a>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                    <tr>
+                                        <td style="text-align: center;">
+                                        </td>
+                                        <td style="text-align: center;"></td>
+                                        <td style="text-align: center;">
+                                            <div>
+                                            </div>
+
+                                        </td>
+                                        <td style="text-align: center;"></td>
+                                        <td style="text-align: center;">
+                                            Amount:	@ViewBag.Amount
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+
+                    }
+                </div>
+            </div>
+            <div class="acceptOrder">
+                <button class="action" onclick="checkout()">
+                    Checkout
+                </button>
+                <button class="action" onclick="Cancel()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+        <div class="right">
+            <div class="products">
+
+                <div class="rightTitle">
+                    Product
+                </div>
+                <div style="padding:10px">
+                    <form asp-controller="Home" asp-action="Search">
+                        @if (@ViewBag.keySearch == null)
+                        {
+                            <p style="display: flex;">
+                                Title: <input style="width:90%" type="text" name="searchString" />
+                                <input style="width:10%" type="submit" value="Search" />
+                            </p>
+                        }
+                        else
+                        {
+                            <p style="display: flex;">
+                                Title: <input style="width:90%" type="text" name="searchString" value="@ViewBag.keySearch" />
+                                <input style="width:10%" type="submit" value="Search" />
+                            </p>
+                        }
+                    </form>
+                </div>
+                <div class="forProduct">
+
+                    @foreach (var p in @ViewBag.products)
+                    {
+                        
+                        @if (p.ProductPrice >= 10 && p.ProductPrice < 15)
+                        {
+                            <button class="product" style="background-color:blue" onclick="addCart('@p.ProductId')">
+                                @p.ProductName @p.ProductPrice
+                            </button>
+                        }
+                        @if (p.ProductPrice >= 15 && p.ProductPrice <= 25)
+                        {
+                            <button class="product" style="background-color:red" onclick="addCart('@p.ProductId')">
+                                @p.ProductName @p.ProductPrice
+                            </button>
+                        }
+                        @if (p.ProductPrice > 25 && p.ProductPrice < 40)
+                        {
+                            <button class="product" style="background-color:yellow" onclick="addCart('@p.ProductId')">
+                                @p.ProductName @p.ProductPrice
+                            </button>
+                        }
+
+                    }
+                </div>
+            </div>
+            <div class="categories">
+                <div class="rightTitle">
+                    Category
+                </div>
+                @if (@ViewBag.selectedCate == 0 || @ViewBag.selectedCate == null)
+                {
+                    <button style="background-color: #afaf7d;" class="cate" onclick="changeCate('0')">All</button>
+                }
+                else
+                {
+                    <button class="cate" onclick="changeCate('0')">All</button>
+                }
+
+
+                @foreach (var p in @ViewBag.cate)
+                {
+                    if (@ViewBag.selectedCate == p.CateId)
+                    {
+                        <button style="background-color: #afaf7d;" class="cate" value="@p.CateId" onclick="changeCate('@p.CateId')">@p.CateName</button>
+                    }
+                    else
+                    {
+                        <button class="cate" value="@p.CateId" onclick="changeCate('@p.CateId')">@p.CateName</button>
+                    }
+
+                }
+
+            </div>
+        </div>
+    </div>
+    <script>
+        function Cancel(){
+           const URL = `/Cart/Cancel`;
+           window.location=URL;
+        }
+        function changeCate(cateid){
+           const URL = `/Home/Filter/${cateid}`;
+           window.location=URL;
+        }
+        function checkout(){
+            const URL="/Cart/CheckoutCart";
+            window.location=URL;
+        }
+        function addCart(pro){
+            const URL=`/Cart/AddToCart/${pro}`;
+            window.location=URL;
+        }
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>
